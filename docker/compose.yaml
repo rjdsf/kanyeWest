@@ -1,0 +1,26 @@
+services:
+  kanye-west:
+    build:
+      context: ./frankenphp
+    environment:
+      - XDEBUG_SESSION=PHPSTORM
+      - PHP_IDE_CONFIG=${XDEBUG_PHP_IDE_CONFIG}
+    volumes:
+      - ../app:/app
+    ports:
+      - "8080:8000"
+
+  service-redis:
+    image: redis:alpine
+    volumes:
+      - redis:/data
+    network_mode: service:kanye-west
+
+
+networks:
+  default:
+    name: playground
+    external: true
+
+volumes:
+  redis:
