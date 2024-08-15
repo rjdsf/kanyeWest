@@ -14,6 +14,7 @@ service-install:
 #	@make run-migrations
 
 
+
 #docker compose commands
 docker-up:
 	@docker compose -f $(DOCKER_COMPOSE_FILE) up -d

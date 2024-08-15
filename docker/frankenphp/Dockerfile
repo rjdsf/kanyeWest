@@ -7,10 +7,18 @@ RUN install-php-extensions \
     redis
     # Add other PHP extensions here...
 
- # copy xdebug config
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+supervisor \
+zip unzip
+
+# copy xdebug config
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
+# Setting up supervisor
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 #setting up composer
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-ENTRYPOINT ["php", "/app/artisan", "octane:frankenphp", "--workers=1", "--max-requests=1"]
+ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
