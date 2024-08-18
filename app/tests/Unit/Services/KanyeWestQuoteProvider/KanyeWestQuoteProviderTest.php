@@ -6,6 +6,7 @@ namespace Tests\Unit\Services\KanyeWestQuoteProvider;
 use App\Services\KanyeWestQuoteProvider\Core\Request\KanyeWestQuoteRequest;
 use App\Services\KanyeWestQuoteProvider\KanyeWestQuoteProvider;
 use App\ValueObjects\QuotesValueObject;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -18,6 +19,9 @@ class KanyeWestQuoteProviderTest extends TestCase
         $this->kaneWestQuoteProvider = $this->createMock(KanyeWestQuoteRequest::class);
     }
 
+    /**
+     * @throws GuzzleException
+     */
     public function testGetQuotes():void
     {
         $quote = new QuotesValueObject('Kanye West', new Collection());
@@ -46,7 +50,7 @@ class KanyeWestQuoteProviderTest extends TestCase
         $kaneWestQuoteProvider = new KanyeWestQuoteProvider($this->kaneWestQuoteProvider);
         $result = $kaneWestQuoteProvider->getQuotes(5,true);
 
-        $this->assertInstanceOf(QuotesValueObject::class,$result);;
+        $this->assertInstanceOf(QuotesValueObject::class,$result);
     }
 
 

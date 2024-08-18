@@ -3,7 +3,7 @@ import Layout from "../Shares/Layout.vue";
 </script>
 
 <script>
-import {router, useForm} from '@inertiajs/vue3'
+import {router} from '@inertiajs/vue3'
 
 export default {
 
