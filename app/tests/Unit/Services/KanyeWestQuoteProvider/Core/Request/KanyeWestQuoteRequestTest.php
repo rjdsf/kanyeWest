@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\tests\Unit\Services\KanyeWestQuoteProvider\Core\Request;
+namespace Tests\Unit\Services\KanyeWestQuoteProvider\Core\Request;
 
 use App\Services\KanyeWestQuoteProvider\Core\Request\KanyeWestQuoteRequest;
+use App\ValueObjects\QuotesValueObject;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Collection;
@@ -50,7 +51,7 @@ class KanyeWestQuoteRequestTest extends TestCase
             ->with(
                 'kanye-west-quotes',
                 Mockery::on(function ($quotes) {
-                    return $quotes instanceof Collection && $quotes->count() === 5;
+                    return $quotes instanceof QuotesValueObject && $quotes->getQuotes()->count() === 5;
                 }),
                 Mockery::type('DateTime')
             );
@@ -78,7 +79,7 @@ class KanyeWestQuoteRequestTest extends TestCase
         $kaneWestQuoteProvider = new KanyeWestQuoteRequest($this->client);
         $result = $kaneWestQuoteProvider->getQuotes(5, true);
 
-        $this->assertInstanceOf(Collection::class, $result);
+        $this->assertInstanceOf(QuotesValueObject::class, $result);
     }
 
 
@@ -111,7 +112,7 @@ class KanyeWestQuoteRequestTest extends TestCase
         $kaneWestQuoteProvider = new KanyeWestQuoteRequest($this->client);
         $result = $kaneWestQuoteProvider->getQuotes(5);
 
-        $this->assertInstanceOf(Collection::class, $result);
+        $this->assertInstanceOf(QuotesValueObject::class, $result);
     }
 
     /**
@@ -127,12 +128,12 @@ class KanyeWestQuoteRequestTest extends TestCase
         Cache::shouldReceive('get')
             ->once()
             ->with('kanye-west-quotes')
-            ->andReturn(new Collection());
+            ->andReturn(new QuotesValueObject('Kanye West', new Collection()));
 
         $kaneWestQuoteProvider = new KanyeWestQuoteRequest($this->client);
         $result = $kaneWestQuoteProvider->getQuotes(5);
 
-        $this->assertInstanceOf(Collection::class, $result);
+        $this->assertInstanceOf(QuotesValueObject::class, $result);
     }
 
 }

@@ -30,13 +30,20 @@ you should be able to call the following endpoint with a Bearer token which is t
 
 To get the quotes, quotes are refreshed every 5 minutes by default.
 ```
-http://localhost:8080/kanye-west/quotes
+GET: http://localhost:8080/api/kanye-west/quotes
 ```
 
 For refreshing the quotes
 ```
-http://localhost:8080/kanye-west/quotes/refresh
+POST: http://localhost:8080/api/kanye-west/quotes/refresh
 ```
+
+A Postman collection can be found in the root of the project.
+```
+Quotes_Api.postman_collection.json
+```
+
+
 
 ## Running Tests
 To run the tests run the following command

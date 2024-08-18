@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace App\Contracts;
 
-use Illuminate\Support\Collection;
+use App\ValueObjects\QuotesValueObject;
 
 interface QuotesProviderInterface
 {
-    public function getQuotes(int $limit, bool $invalidateCache ): Collection;
-    public function refreshQuotes(int $limit): Collection;
+    public function getQuotes(int $limit, bool $invalidateCache ): QuotesValueObject;
 }

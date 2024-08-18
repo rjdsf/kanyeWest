@@ -9,21 +9,21 @@ class GetQuoteTest extends TestCase
 
     public function testGetQuote()
     {
-        $response =  $this->get('/kanye-west/quotes',
-            [
+        $response = $this->get(uri: '/api/kanye-west/quotes',
+            headers: [
                 'Accept' => 'application/json',
-                'Authorization' => 'Bearer '. env('API_TOKEN'),
+                'Authorization' => 'Bearer ' . env('API_TOKEN'),
             ]);
 
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testRefreshQuote ()
+    public function testRefreshQuote()
     {
-        $response =  $this->get('/kanye-west/quotes/refresh',
-            [
+        $response = $this->post(uri: '/api/kanye-west/quotes/refresh',
+            headers: [
                 'Accept' => 'application/json',
-                'Authorization' => 'Bearer '. env('API_TOKEN'),
+                'Authorization' => 'Bearer ' . env('API_TOKEN'),
             ]);
 
         $this->assertEquals(200, $response->getStatusCode());

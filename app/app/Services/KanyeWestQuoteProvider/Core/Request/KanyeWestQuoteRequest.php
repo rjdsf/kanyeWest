@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\KanyeWestQuoteProvider\Core\Request;
 
-use App\ValueObjects\QuoteValueObject;
+use App\ValueObjects\QuotesValueObject;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -22,10 +22,9 @@ class KanyeWestQuoteRequest
     }
 
     /**
-     * @return Collection<QuoteValueObject>
-     * @throws Exception|GuzzleException
+     * @throws GuzzleException
      */
-    public function getQuotes(int $limit, bool $invalidateCache = false): Collection
+    public function getQuotes(int $limit, bool $invalidateCache = false): QuotesValueObject
     {
         if ($invalidateCache) {
             Cache::forget(self::CACHE_KEY);
@@ -34,7 +33,8 @@ class KanyeWestQuoteRequest
             return Cache::get(self::CACHE_KEY);
         }
 
-        $quotes = $this->getQuoteCollection($limit);
+        $quotes = new QuotesValueObject('Kayne West',$this->getQuoteCollection($limit));
+
         Cache::put(self::CACHE_KEY, $quotes, now()->addMinutes(5));
 
         return $quotes;
@@ -56,7 +56,7 @@ class KanyeWestQuoteRequest
         }
         $content = json_decode($response->getBody()->getContents(), true);
 
-        $collection->add(new QuoteValueObject($content['quote'], 'Kanye West'));
+        $collection->add($content['quote']);
 
         if ($collection->count() === $limit) {
             return $collection;
