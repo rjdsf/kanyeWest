@@ -13,12 +13,18 @@ use Tests\TestCase;
 
 class GetQuoteTest extends TestCase
 {
+
+    private const string QUOTE = 'Some quote from Kanye West';
+    private const string ACCEPT = 'application/json';
+    private string $authorization = '';
+
     private MockInterface & Response $response;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->response = Mockery::mock(Response::class);
+        $this->authorization = 'Bearer ' . config('api.token');
 
     }
 
@@ -30,7 +36,7 @@ class GetQuoteTest extends TestCase
             ->andReturn(200);
         $this->response->shouldReceive('json')
             ->times(5)
-            ->andReturn(['quote' => 'I am the greatest']);
+            ->andReturn(['quote' => self::QUOTE]);
 
         Cache::shouldReceive('has')
             ->once()
@@ -50,18 +56,18 @@ class GetQuoteTest extends TestCase
 
         $this->get(uri: '/api/kanye-west/quotes',
             headers: [
-                'Accept' => 'application/json',
-                'Authorization' => 'Bearer ' . config('api.token'),
+                'Accept' => self::ACCEPT,
+                'Authorization' => $this->authorization,
             ])->assertOk()->assertJson([
 
             'data' => [
                 'author' => 'Kanye West',
                 'quotes' => [
-                    'I am the greatest',
-                    'I am the greatest',
-                    'I am the greatest',
-                    'I am the greatest',
-                    'I am the greatest'
+                    self::QUOTE,
+                    self::QUOTE,
+                    self::QUOTE,
+                    self::QUOTE,
+                    self::QUOTE,
                 ]
             ]
         ]);
@@ -77,7 +83,7 @@ class GetQuoteTest extends TestCase
 
         $this->response->shouldReceive('json')
             ->times(5)
-            ->andReturn(['quote' => 'Some quote from Kanye West']);
+            ->andReturn(['quote' => self::QUOTE,]);
 
         Cache::shouldReceive('forget')
             ->once()
@@ -100,17 +106,17 @@ class GetQuoteTest extends TestCase
 
         $this->post(uri: '/api/kanye-west/quotes/refresh',
             headers: [
-                'Accept' => 'application/json',
-                'Authorization' => 'Bearer ' . config('api.token'),
+                'Accept' => self::ACCEPT,
+                'Authorization' => $this->authorization,
             ])->assertOk()->assertJson([
             'data' => [
                 'author' => 'Kanye West',
                 'quotes' => [
-                    'Some quote from Kanye West',
-                    'Some quote from Kanye West',
-                    'Some quote from Kanye West',
-                    'Some quote from Kanye West',
-                    'Some quote from Kanye West'
+                    self::QUOTE,
+                    self::QUOTE,
+                    self::QUOTE,
+                    self::QUOTE,
+                    self::QUOTE,
                 ]
             ]]);
     }
@@ -119,8 +125,8 @@ class GetQuoteTest extends TestCase
     {
         $this->post(uri: '/api/kanye-west/quotes/refresh',
             headers: [
-                'Accept' => 'application/json',
-                'Authorization' => 'Bearer ' . 'some_invalid_token',
+                'Accept' => self::ACCEPT,
+                'Authorization' => 'some_invalid_token',
             ])->assertUnauthorized();
     }
 
