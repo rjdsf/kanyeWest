@@ -9,7 +9,8 @@ use App\ValueObjects\QuotesValueObject;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
+
 
 class KanyeWestQuoteProviderTest extends TestCase
 {

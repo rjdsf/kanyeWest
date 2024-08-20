@@ -4,26 +4,17 @@ declare(strict_types=1);
 
 namespace App\Services\KanyeWestQuoteProvider\Core\Request;
 
+use App\Services\KanyeWestQuoteProvider\Core\Exceptions\FailToRetrieveQuote;
 use App\ValueObjects\QuotesValueObject;
-use Exception;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 
 class KanyeWestQuoteRequest
 {
 
     private const string CACHE_KEY = 'kanye-west-quotes';
 
-    public function __construct(
-        private readonly Client $client
-    ) {
-    }
-
-    /**
-     * @throws GuzzleException
-     */
     public function getQuotes(int $limit, bool $invalidateCache = false): QuotesValueObject
     {
         if ($invalidateCache) {
@@ -33,28 +24,23 @@ class KanyeWestQuoteRequest
             return Cache::get(self::CACHE_KEY);
         }
 
-        $quotes = new QuotesValueObject('Kayne West',$this->getQuoteCollection($limit));
+        $quotes = new QuotesValueObject('Kanye West',$this->getQuoteCollection($limit));
 
         Cache::put(self::CACHE_KEY, $quotes, now()->addMinutes(5));
 
         return $quotes;
     }
 
-
-    /**
-     * @throws GuzzleException
-     * @throws Exception
-     */
     private function getQuoteCollection(int $limit, ?Collection $collection = null): collection
     {
         if (is_null($collection)) {
             $collection = new Collection();
         }
-        $response = $this->client->request('GET', 'https://api.kanye.rest');
-        if ($response->getStatusCode() !== 200) {
-            throw new Exception('Error while fetching Kanye West quote');
+        $response = Http::get( 'https://api.kanye.rest');
+        if ($response->status() !== 200) {
+            throw new FailToRetrieveQuote();
         }
-        $content = json_decode($response->getBody()->getContents(), true);
+        $content = $response->json();
 
         $collection->add($content['quote']);
 

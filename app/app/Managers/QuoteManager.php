@@ -19,7 +19,7 @@ class QuoteManager extends Manager
     /**
      * @throws BindingResolutionException
      */
-    public function createKanyeWestDriver(): QuotesProviderInterface
+    public function createKanyeWestDriver(): KanyeWestQuoteProvider
     {
         return   $this->container->make(KanyeWestQuoteProvider::class);
 

@@ -7,8 +7,6 @@ use App\Contracts\QuotesProviderInterface;
 use App\Services\KanyeWestQuoteProvider\Core\Request\KanyeWestQuoteRequest;
 use App\ValueObjects\QuotesValueObject;
 use Exception;
-use GuzzleHttp\Exception\GuzzleException;
-
 
 
 readonly class KanyeWestQuoteProvider implements QuotesProviderInterface
@@ -21,7 +19,7 @@ readonly class KanyeWestQuoteProvider implements QuotesProviderInterface
     }
 
     /**
-     * @throws Exception|GuzzleException
+     * @throws Exception
      */
     public function getQuotes(int $limit = 5, bool $invalidateCache = false): QuotesValueObject
     {

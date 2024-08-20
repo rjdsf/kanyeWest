@@ -15,7 +15,7 @@ class AuthApiToken
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $apiToken = env('API_TOKEN');
+        $apiToken = config('api.token');
         if ($request->header('Authorization') !== 'Bearer ' . $apiToken) {
             return response('Unauthorized', 401);
         }
